@@ -18,7 +18,8 @@
 from __future__ import absolute_import, division, print_function
 
 import tensorflow.compat.v1 as tf
-from depth_from_video_in_the_wild import transform_utils
+
+from diw.model import transform_utils
 
 
 class TransformedDepthMap(object):

@@ -32,41 +32,41 @@ def _print_losses(dir1):
 
 
 @click.command()
-@click.argument("file_extension", default="jpg")
-@click.argument("learning_rate", default=1e-4)
-@click.argument("reconstr_weight", default=0.85)
-@click.argument("ssim_weight", default=3.0)
-@click.argument("smooth_weight", default=1e-2)
-@click.argument("depth_consistency_loss_weight", default=0.01)
 @click.argument("batch_size", default=4)
+@click.argument("boxify", default=True)
+@click.argument("depth_consistency_loss_weight", default=0.01)
+@click.argument("file_extension", default="jpg")
+@click.argument("foreground_dilation", default=8)
 @click.argument("img_height", default=128)
 @click.argument("img_width", default=416)
+@click.argument("input_file", default="train")
+@click.argument("learning_rate", default=1e-4)
+@click.argument("learn_intrinsics", default=True)
 @click.argument("queue_size", default=2000)
+@click.argument("reconstr_weight", default=0.85)
+@click.argument("rotation_consistency_weight", default=1e-3)
+@click.argument("ssim_weight", default=3.0)
+@click.argument("smooth_weight", default=1e-2)
 @click.argument("seed", default=8964)
-@click.argument("weight_reg", default=1e-2)
-@click.argument("train_steps", default=int(1e6))
 @click.argument("summary_freq", default=100)
 @click.argument("save_freq", default=100)
 @click.argument("save_intrinsics", default=100)
-@click.argument("input_file", default="train")
-@click.argument("rotation_consistency_weight", default=1e-3)
+@click.argument("train_steps", default=int(1e6))
 @click.argument("translation_consistency_weight", default=1e-2)
-@click.argument("foreground_dilation", default=8)
-@click.argument("learn_intrinsics", default=True)
-@click.argument("boxify", default=True)
-@click.option(
-    "--data_dir",
-    "data_dir",
-    default="/home/vy/university/thesis/datasets/MOTSChallenge_PREPROCESSED/",
-    type=click.Path(exists=True),
-    help="path to reader config file",
-)
+@click.argument("weight_reg", default=1e-2)
 @click.option(
     "--checkpoint_dir",
     "checkpoint_dir",
     default="./data/checkpoints/test",
     type=click.Path(exists=True),
     help="path to checkpoint directory",
+)
+@click.option(
+    "--data_dir",
+    "data_dir",
+    default="/home/vy/university/thesis/datasets/MOTSChallenge_PREPROCESSED/",
+    type=click.Path(exists=True),
+    help="path to reader config file",
 )
 @click.option(
     "--imagenet_ckpt",

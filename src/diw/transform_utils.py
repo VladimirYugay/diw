@@ -121,7 +121,7 @@ def combine(rot_mat1, trans_vec1, rot_mat2, trans_vec2):
     # Where each R is a 3x3 matrix, each t is a 3-long column vector, and 0 0 0 is
     # a row vector of 3 zeros. We see that the total rotation is R2*R1 and the t
     # total translation is R2*t1 + t2.
-    r2r1 = tf.tf_matmul_separate(rot_mat2, rot_mat1)
-    r2t1 = tf.tf_matmul_separate(rot_mat2, tf.expand_dims(trans_vec1, -1))
+    r2r1 = tf_matmul_separate(rot_mat2, rot_mat1)
+    r2t1 = tf_matmul_separate(rot_mat2, tf.expand_dims(trans_vec1, -1))
     r2t1 = tf.squeeze(r2t1, axis=-1)
     return r2r1, r2t1 + trans_vec2

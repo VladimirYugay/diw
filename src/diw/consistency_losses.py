@@ -18,8 +18,9 @@
 from __future__ import absolute_import, division, print_function
 
 import tensorflow.compat.v1 as tf  # tf
-from depth_from_video_in_the_wild import transform_utils
 from tensorflow.contrib import resampler as contrib_resampler
+
+from diw import transform_utils
 
 
 def rgbd_consistency_loss(frame1transformed_depth, frame1rgb, frame2depth, frame2rgb):

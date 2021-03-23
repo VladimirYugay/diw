@@ -74,6 +74,32 @@ def inverse_euler(angles):
     return tf.stack([x, y, z], axis=-1)
 
 
+def tf_matmul_separate(A, B):
+    batch, a_h, a_w, _, _ = A.get_shape()
+    if batch * a_h * a_w < 80000:
+        return tf.matmul(A, B)
+    w_half = tf.cast(tf.div(a_w, 2), tf.int32)
+    h_half = tf.cast(tf.div(a_h, 2), tf.int32)
+    A_1 = A[:, :h_half, :w_half, :, :]
+    A_2 = A[:, :h_half, w_half:, :, :]
+    A_3 = A[:, h_half:, :w_half, :, :]
+    A_4 = A[:, h_half:, w_half:, :, :]
+
+    B_1 = B[:, :h_half, :w_half, :, :]
+    B_2 = B[:, :h_half, w_half:, :, :]
+    B_3 = B[:, h_half:, :w_half, :, :]
+    B_4 = B[:, h_half:, w_half:, :, :]
+
+    res_1 = tf_matmul_separate(A_1, B_1)
+    res_2 = tf_matmul_separate(A_2, B_2)
+    res_3 = tf_matmul_separate(A_3, B_3)
+    res_4 = tf_matmul_separate(A_4, B_4)
+    tmp_up = tf.concat([res_1, res_2], 2)
+    tmp_down = tf.concat([res_3, res_4], 2)
+    final_res = tf.concat([tmp_up, tmp_down], 1)
+    return final_res
+
+
 def combine(rot_mat1, trans_vec1, rot_mat2, trans_vec2):
     """Composes two transformations, each has a rotation and a translation.
     Args:
@@ -95,7 +121,7 @@ def combine(rot_mat1, trans_vec1, rot_mat2, trans_vec2):
     # Where each R is a 3x3 matrix, each t is a 3-long column vector, and 0 0 0 is
     # a row vector of 3 zeros. We see that the total rotation is R2*R1 and the t
     # total translation is R2*t1 + t2.
-    r2r1 = tf.matmul(rot_mat2, rot_mat1)
-    r2t1 = tf.matmul(rot_mat2, tf.expand_dims(trans_vec1, -1))
+    r2r1 = tf.tf_matmul_separate(rot_mat2, rot_mat1)
+    r2t1 = tf.tf_matmul_separate(rot_mat2, tf.expand_dims(trans_vec1, -1))
     r2t1 = tf.squeeze(r2t1, axis=-1)
     return r2r1, r2t1 + trans_vec2

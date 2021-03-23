@@ -19,7 +19,7 @@ from __future__ import absolute_import, division, print_function
 
 import tensorflow.compat.v1 as tf
 
-from diw.model import transform_utils
+from diw import transform_utils
 
 
 class TransformedDepthMap(object):

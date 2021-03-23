@@ -38,18 +38,21 @@ def add_intrinsics_head(bottleneck, image_height, image_width):
     with tf.variable_scope("CameraIntrinsics"):
         # Since the focal lengths in pixels tend to be in the order of magnitude of
         # the image width and height, we multiply the network prediction by them.
-        focal_lengths = tf.squeeze(
-            layers.conv2d(
-                bottleneck,
-                2,
-                [1, 1],
-                stride=1,
-                activation_fn=tf.nn.softplus,
-                weights_regularizer=None,
-                scope="foci",
-            ),
-            axis=(1, 2),
-        ) * tf.to_float(tf.convert_to_tensor([[image_width, image_height]]))
+        focal_lengths = (
+            tf.squeeze(
+                layers.conv2d(
+                    bottleneck,
+                    2,
+                    [1, 1],
+                    stride=1,
+                    activation_fn=tf.nn.softplus,
+                    weights_regularizer=None,
+                    scope="foci",
+                ),
+                axis=(1, 2),
+            )
+            * tf.to_float(tf.convert_to_tensor([[image_width, image_height]]))
+        )
 
         # The pixel offsets tend to be around the center of the image, and they
         # are typically a fraction the image width and height in pixels. We thus

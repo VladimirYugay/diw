@@ -6,6 +6,7 @@ channels:
 dependencies:
   - python>=3.6
   - pip
+  - click
   - numpy>=1.13.3
   - tensorflow-gpu==1.15
   - pip:

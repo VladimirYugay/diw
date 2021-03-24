@@ -11,6 +11,8 @@ dependencies:
   - tensorflow-gpu==1.15
   - pip:
      - -e .  # install git checkout of diw in editable mode
+     - matplotlib==3.3.4
+     - Pillow==8.0.1
      - tensorflow==1.15.0
      - tensorflow-graphics==1.0.0
 

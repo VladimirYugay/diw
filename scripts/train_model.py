@@ -185,7 +185,7 @@ def main(
 
             # steps_per_epoch == 0 is intended for debugging, when we run with a
             # single image for sanity check
-            if steps_per_epoch == 0 or step % steps_per_epoch == 0:
+            if step % (steps_per_epoch * save_freq) == 0:
                 logging.info("[*] Saving checkpoint to %s...", checkpoint_dir)
                 saver.save(
                     sess, os.path.join(checkpoint_dir, "model"), global_step=global_step

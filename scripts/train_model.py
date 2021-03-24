@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-import io
 import logging
 import math
 import os
@@ -19,21 +18,6 @@ sys.excepthook = ultratb.FormattedTB(mode="Verbose", color_scheme="Linux", call_
 
 _logger = logging.getLogger(__name__)
 gfile = tf.gfile
-MAX_TO_KEEP = 1000000  # Maximum number of checkpoints to keep.
-
-
-def load(filename):
-    with gfile.Open(filename) as f:
-        return np.load(io.BytesIO(f.read()))
-
-
-def _print_losses(dir1):
-    for f in gfile.ListDirectory(dir1):
-        if "loss" in f:
-            print("----------", f, end=" ")
-            f1 = os.path.join(dir1, f)
-            t1 = load(f1).astype(float)
-            print(t1)
 
 
 @click.command()

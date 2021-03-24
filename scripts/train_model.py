@@ -77,12 +77,6 @@ def _print_losses(dir1):
     help="path to reader config file",
 )
 @click.option(
-    "--debug",
-    "debug",
-    help="One training step performed and results dumped into deubg folder",
-    flag_value=True,
-)
-@click.option(
     "--imagenet_ckpt",
     "imagenet_ckpt",
     type=click.Path(exists=True),
@@ -121,7 +115,6 @@ def main(
     imagenet_ckpt,
     data_dir,
     checkpoint_dir,
-    debug,
 ):
     logging.basicConfig(
         stream=sys.stdout,
@@ -187,9 +180,6 @@ def main(
                 fetches["loss"] = train_model.total_loss
                 fetches["summary"] = sv.summary_op
 
-            if debug:
-                fetches.update(train_model.exports)
-
             results = sess.run(fetches)
             global_step = results["global_step"]
 
@@ -208,21 +198,6 @@ def main(
                     time.time() - start_time,
                     results["loss"],
                 )
-
-            if debug:
-                debug_dir = os.path.join(checkpoint_dir, "debug")
-                if not gfile.Exists(debug_dir):
-                    gfile.MkDir(debug_dir)
-                for name, tensor in results.items():
-                    if name == "summary":
-                        continue
-                    s = io.BytesIO()
-                    filename = os.path.join(debug_dir, name)
-                    np.save(s, tensor)
-                    with gfile.Open(filename, "w") as f:
-                        f.write(s.getvalue())
-                # _print_losses(os.path.join(checkpoint_dir, 'debug'))
-                return
 
             # steps_per_epoch == 0 is intended for debugging, when we run with a
             # single image for sanity check

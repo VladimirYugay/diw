@@ -13,7 +13,6 @@ dependencies:
      - -e .  # install git checkout of diw in editable mode
      - tensorflow==1.15.0
      - tensorflow-graphics==1.0.0
-     - absl-py>=0.5.0
 
   # DEVELOPMENT ONLY PACKAGES (could also be kept in a separate environment file)
   - jupyterlab

@@ -21,7 +21,7 @@ gfile = tf.gfile
 
 
 @click.command()
-@click.option("batch_size", default=4)
+@click.option("--batch_size", "batch_size", default=4)
 @click.option(
     "--boxify",
     "boxify",
@@ -41,37 +41,43 @@ gfile = tf.gfile
     type=click.Path(exists=True),
     help="path to reader config file",
 )
-@click.option("file_extension", default="jpg")
-@click.option("foreground_dilation", default=8)
-@click.option("depth_consistency_loss_weight", default=0.01)
+@click.option("--file_extension", "file_extension", default="jpg")
+@click.option("--foreground_dilation", "foreground_dilation", default=8)
+@click.option(
+    "--depth_consistency_loss_weight", "depth_consistency_loss_weight", default=0.01
+)
 @click.option(
     "--imagenet_ckpt",
     "imagenet_ckpt",
     type=click.Path(exists=True),
     help="path to imagenet checkpoint directory",
 )
-@click.option("img_height", default=128)
-@click.option("img_width", default=416)
-@click.option("input_file", default="train")
+@click.option("--img_height", "img_height", default=128)
+@click.option("--img_width", "img_width", default=416)
+@click.option("--input_file", "input_file", default="train")
 @click.option(
     "--learn_intrinsics",
     "learn_intrinsics",
     help="Learn intrinsics",
     flag_value=True,
 )
-@click.option("learning_rate", default=1e-4)
-@click.option("queue_size", default=2000)
-@click.option("reconstr_weight", default=0.85)
-@click.option("rotation_consistency_weight", default=1e-3)
-@click.option("ssim_weight", default=3.0)
-@click.option("smooth_weight", default=1e-2)
-@click.option("seed", default=8964)
-@click.option("summary_freq", default=100)
-@click.option("save_freq", default=100)
-@click.option("save_intrinsics", default=100)
-@click.option("train_steps", default=23840)
-@click.option("translation_consistency_weight", default=1e-2)
-@click.option("weight_reg", default=1e-2)
+@click.option("--learning_rate", "learning_rate", default=1e-4)
+@click.option("--queue_size", "queue_size", default=2000)
+@click.option("--reconstr_weight", "reconstr_weight", default=0.85)
+@click.option(
+    "--rotation_consistency_weight", "rotation_consistency_weight", default=1e-3
+)
+@click.option("--ssim_weight", "ssim_weight", default=3.0)
+@click.option("--smooth_weight", "smooth_weight", default=1e-2)
+@click.option("--seed", "seed", default=8964)
+@click.option("--summary_freq", "summary_freq", default=100)
+@click.option("--save_freq", "save_freq", default=100)
+@click.option("--save_intrinsics", "save_intrinsics", default=100)
+@click.option("--train_steps", "train_steps", default=23840)
+@click.option(
+    "--translation_consistency_weight", "translation_consistency_weight", default=1e-2
+)
+@click.option("--weight_reg", "weight_reg", default=1e-2)
 @click.version_option(diw.__version__)
 def main(
     file_extension,

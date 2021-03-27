@@ -8,7 +8,7 @@ import numpy as np
 from IPython.core import ultratb
 
 import diw
-from diw.readers import MOTSReader
+from diw.readers.mots_reader import MOTSReader
 
 sys.excepthook = ultratb.FormattedTB(mode="Verbose", color_scheme="Linux", call_pdb=1)
 

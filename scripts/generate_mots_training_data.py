@@ -38,14 +38,14 @@ def populate_file(dir):
     "data_dir",
     default="/home/vy/university/thesis/datasets/MOTS/train",
     type=click.Path(exists=True),
-    help="path to reader config file",
+    help="Path to MOTS dataset",
 )
 @click.option(
     "--output_dir",
     "output_dir",
     default="./data/preprocessed/MOTS_preprocessed",
     type=click.Path(exists=True),
-    help="path to reader config file",
+    help="Output path of the dataset",
 )
 @click.version_option(diw.__version__)
 def main(data_dir, output_dir):

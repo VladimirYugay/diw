@@ -62,7 +62,7 @@ gfile = tf.gfile
     flag_value=True,
 )
 @click.option("--learning_rate", "learning_rate", default=1e-4)
-@click.option("--queue_size", "queue_size", default=2000)
+@click.option("--queue_size", "queue_size", default=100)
 @click.option("--reconstr_weight", "reconstr_weight", default=0.85)
 @click.option(
     "--rotation_consistency_weight", "rotation_consistency_weight", default=1e-3

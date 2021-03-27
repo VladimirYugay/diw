@@ -11,8 +11,10 @@ dependencies:
   - tensorflow-gpu==1.15
   - pip:
      - -e .  # install git checkout of diw in editable mode
+     - opencv-python==4.5.1.48
      - matplotlib==3.3.4
      - Pillow==8.0.1
+     - pycocotools==2.0.2
      - tensorflow==1.15.0
      - tensorflow-graphics==1.0.0
 

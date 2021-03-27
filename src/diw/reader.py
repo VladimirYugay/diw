@@ -346,8 +346,6 @@ class DataReader(object):
         with gfile.Open(os.path.join(data_dir, "%s.txt" % split), "r") as f:
             frames = f.readlines()
             frames = [k.rstrip() for k in frames]
-            sequence_id = "MOTS20-02"
-            frames = [frame for frame in frames if sequence_id in frame]
         image_file_list = [
             os.path.join(data_dir, frames[i] + "/image." + self.file_extension)
             for i in range(len(frames))

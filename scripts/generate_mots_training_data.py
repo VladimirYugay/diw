@@ -50,7 +50,11 @@ def populate_file(dir):
 @click.version_option(diw.__version__)
 def main(data_dir, output_dir):
     height, width = 128, 416
-    config = {"resize_shape": [width, height], "read_boxes": False}
+    config = {
+        "resize_shape": [width, height],
+        "read_boxes": False,
+        "egomotion_path": None,
+    }
     reader = MOTSReader(data_dir, config)
     for seq_id in reader.sequence_info.keys():
         for i in range(1, reader.sequence_info[seq_id]["length"] - 1):

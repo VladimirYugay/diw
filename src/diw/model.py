@@ -19,6 +19,9 @@ The method is described in https://arxiv.org/abs/1904.04998
 
 from __future__ import absolute_import, division, print_function
 
+import os
+
+import tensorflow
 import tensorflow.compat.v1 as tf
 from absl import logging
 from tensorflow.contrib import slim as contrib_slim
@@ -32,6 +35,70 @@ from diw import (
     transform_depth_map,
     transform_utils,
 )
+
+
+def get_vars_to_save_and_restore(ckpt=None):
+    """Returns list of variables that should be saved/restored.
+    Args:
+      ckpt: Path to existing checkpoint.  If present, returns only the subset of
+          variables that exist in given checkpoint.
+    Returns:
+      List of all variables that need to be saved/restored.
+    """
+    model_vars = tf.trainable_variables()
+    # Add batchnorm variables.
+    bn_vars = [
+        v
+        for v in tf.global_variables()
+        if "moving_mean" in v.op.name
+        or "moving_variance" in v.op.name
+        or "mu" in v.op.name
+        or "sigma" in v.op.name
+        or "global_scale_var" in v.op.name
+    ]
+    model_vars.extend(bn_vars)
+    model_vars = sorted(model_vars, key=lambda x: x.op.name)
+    mapping = {}
+    if ckpt is not None:
+        ckpt_var = tensorflow.train.list_variables(ckpt)
+        ckpt_var_names = [name for (name, unused_shape) in ckpt_var]
+        ckpt_var_shapes = [shape for (unused_name, shape) in ckpt_var]
+        not_loaded = list(ckpt_var_names)
+        for v in model_vars:
+            if v.op.name not in ckpt_var_names:
+                # For backward compatibility, try additional matching.
+                v_additional_name = v.op.name.replace("egomotion_prediction/", "")
+                if v_additional_name in ckpt_var_names:
+                    # Check if shapes match.
+                    ind = ckpt_var_names.index(v_additional_name)
+                    if ckpt_var_shapes[ind] == v.get_shape():
+                        mapping[v_additional_name] = v
+                        not_loaded.remove(v_additional_name)
+                        continue
+                    else:
+                        logging.warn("Shape mismatch, will not restore %s.", v.op.name)
+                logging.warn(
+                    "Did not find var %s in checkpoint: %s",
+                    v.op.name,
+                    os.path.basename(ckpt),
+                )
+            else:
+                # Check if shapes match.
+                ind = ckpt_var_names.index(v.op.name)
+                if ckpt_var_shapes[ind] == v.get_shape() and v.op.name in not_loaded:
+                    mapping[v.op.name] = v
+                    not_loaded.remove(v.op.name)
+                else:
+                    logging.warn("Shape mismatch, will not restore %s.", v.op.name)
+        if not_loaded:
+            logging.warn("The following variables in the checkpoint were not loaded:")
+            for varname_not_loaded in not_loaded:
+                logging.info("%s", varname_not_loaded)
+    else:  # just get model vars.
+        for v in model_vars:
+            mapping[v.op.name] = v
+    return mapping
+
 
 gfile = tf.gfile
 slim = contrib_slim
@@ -112,14 +179,12 @@ class Model(object):
     def _build_train_graph(self):
         """Build a training graph and savers."""
         self._build_loss()
-        ignore_var = "MotionFieldNet/compute_loss/concat_"
+        vars_to_restore = get_vars_to_save_and_restore()
         vars_to_restore = {
-            v for v in tf.trainable_variables() if ignore_var not in v.op.name
+            name: var
+            for name, var in vars_to_restore.items()
+            if "MotionFieldNet/compute_loss/concat_2" not in name
         }
-        print(
-            "Ignored layers:",
-            [v.op.name for v in tf.trainable_variables() if ignore_var in v.op.name],
-        )
         self.saver = tf.train.Saver(vars_to_restore)
         # Create a saver for initializing resnet18 weights from imagenet.
         vars_to_restore = [

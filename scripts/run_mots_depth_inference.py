@@ -63,6 +63,8 @@ def plot_image(image, image_type="RGB"):
 )
 @click.version_option(diw.__version__)
 def main(data_dir, checkpoint_dir, save_img):
+    if save_img:
+        plt.figure()
     height, width = 128, 416
     os.environ["TF_FORCE_GPU_ALLOW_GROWTH"] = "true"  # to fix CUDA bug
     inference_model = Model(
@@ -81,7 +83,10 @@ def main(data_dir, checkpoint_dir, save_img):
                 (seq_path / (model_name + "_depth_images")).mkdir(
                     parents=True, exist_ok=True
                 )
-            img_paths = [p for p in (seq_path / "img1").glob("*") if p.is_file()]
+            img_paths = sorted(
+                [p for p in (seq_path / "img1").glob("*") if p.is_file()],
+                key=lambda path: str(path),
+            )
             for img_path in img_paths:
                 img_name = img_path.parts[-1].split(".")[0]
                 print("Processing sequence: {}, image: {}".format(seq_path, img_name))
@@ -93,13 +98,13 @@ def main(data_dir, checkpoint_dir, save_img):
                 depth = depth[0, :, :, 0]
                 np.save(str(seq_path / model_name / img_name), depth)
                 if save_img:
-                    plt.figure()
                     plt.imshow(depth, plt.cm.get_cmap("plasma").reversed())
                     plt.savefig(
                         str(seq_path / (model_name + "_depth_images"))
                         + "/"
                         + (img_name + ".png")
                     )
+                    plt.clf()
 
 
 if __name__ == "__main__":

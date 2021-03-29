@@ -46,6 +46,7 @@ gfile = tf.gfile
 @click.option(
     "--depth_consistency_loss_weight", "depth_consistency_loss_weight", default=0.01
 )
+@click.option("--gpu_ids", "gpu_ids", default="0")
 @click.option(
     "--imagenet_ckpt",
     "imagenet_ckpt",
@@ -105,6 +106,7 @@ def main(
     imagenet_ckpt,
     data_dir,
     checkpoint_dir,
+    gpu_ids,
 ):
     logging.basicConfig(
         stream=sys.stdout,
@@ -146,6 +148,7 @@ def main(
     sv = tf.train.Supervisor(logdir=checkpoint_dir, save_summaries_secs=0, saver=None)
     config = tf.ConfigProto()
     config.gpu_options.allow_growth = True
+    os.environ["CUDA_VISIBLE_DEVICES"] = gpu_ids
     with sv.managed_session(config=config) as sess:
         logging.info("Attempting to resume training from %s...", checkpoint_dir)
         checkpoint = tf.train.latest_checkpoint(checkpoint_dir)

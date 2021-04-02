@@ -5,7 +5,7 @@ Based on this [repository](https://github.com/google-research/google-research/tr
 
 ## Description
 
-Following changed were introduced:
+Following changes were introduced:
 
 1. Restructured the codebase: separated from tens of other projects, pyscaffold project structure introduced
 2. Reduced number of dependencies
@@ -16,6 +16,8 @@ Following changed were introduced:
 7. Introduced the unified way of loading and saving the checkpoint
 8. Introduced scripts for training and inference
 9. Introduced functionality and dependency chain for training on GPU
+
+*Note*. The project was initially aimed to estimate depth for [MOTS](https://motchallenge.net/data/MOTS/) dataset.
 
 ## Installation
 

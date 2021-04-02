@@ -1,10 +1,21 @@
-# diw
+# Depth From Video In The Wild
 
-Add a short description here!
+Implementation of self supervised monocular depth estimation for video sequences.
+Based on this [repository](https://github.com/google-research/google-research/tree/master/depth_from_video_in_the_wild).
 
 ## Description
 
-A longer description of your project goes here...
+Following changed were introduced:
+
+1. Restructured the codebase: separated from tens of other projects, pyscaffold project structure introduced
+2. Reduced number of dependencies
+3. Refactored code with pre-commit hooks like flake, black etc.
+4. Fixed the bug with not being able to load the pre-trained checkpoints for training (missing layers)
+5. Fixed the bug with not being able to load the pre-trained checkpoints for inference (missing layers)
+6. Fixed the bug with not being able to train on GPU with CUDA 10 version through recursive matrix multiplication
+7. Introduced the unified way of loading and saving the checkpoint
+8. Introduced scripts for training and inference
+9. Introduced functionality and dependency chain for training on GPU
 
 ## Installation
 
@@ -43,20 +54,6 @@ Optional and needed only once after `git clone`:
 
 Then take a look into the `scripts` and `notebooks` folders.
 
-## Dependency Management & Reproducibility
-
-1. Always keep your abstract (unpinned) dependencies updated in `environment.yml` and eventually
-   in `setup.cfg` if you want to ship and install your package via `pip` later on.
-2. Create concrete dependencies as `environment.lock.yml` for the exact reproduction of your
-   environment with:
-   ```bash
-   conda env export -n diw -f environment.lock.yml
-   ```
-   For multi-OS development, consider using `--no-builds` during the export.
-3. Update your current environment with respect to a new `environment.lock.yml` using:
-   ```bash
-   conda env update -f environment.lock.yml --prune
-   ```
 ## Project Organization
 
 ```
@@ -94,11 +91,6 @@ Then take a look into the `scripts` and `notebooks` folders.
 ```
 
 <!-- pyscaffold-notes -->
-
-## Note
-
-This project has been set up using PyScaffold 4.0 and the [dsproject extension] 0.6.
-For details and usage information on PyScaffold see https://pyscaffold.org/.
 
 [conda]: https://docs.conda.io/
 [pre-commit]: https://pre-commit.com/

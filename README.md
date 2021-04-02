@@ -15,6 +15,7 @@ Following changed were introduced:
 6. Fixed the bug with not being able to train on GPU with CUDA 10 version through recursive matrix multiplication
 7. Introduced the unified way of loading and saving the checkpoint
 8. Introduced scripts for training and inference
+9. Introduced functionality and dependency chain for training on GPU
 
 ## Installation
 

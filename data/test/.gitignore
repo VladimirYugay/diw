@@ -2,5 +2,7 @@
 *
 # Except this file
 !.gitignore
+!kitti_data
+!kitti_data/*.png
 !mots_data
 !mots_data/*.jpg

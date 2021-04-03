@@ -71,6 +71,7 @@ def main(data_dir, checkpoint_dir, output_dir):
     checkpoint = tf.train.latest_checkpoint(checkpoint_dir)
     vars_to_restore = get_vars_to_save_and_restore(checkpoint)
     saver = tf.train.Saver(vars_to_restore)
+    plt.figure()
     with tf.Session() as sess:
         saver.restore(sess, checkpoint)
         for img_path in Path(data_dir).glob("**/*"):
@@ -81,7 +82,6 @@ def main(data_dir, checkpoint_dir, output_dir):
             image = image[None, ...]
             depth = inference_model.inference_depth(image, sess)
             depth = depth[0, :, :, 0]
-            plt.figure()
             plt.imshow(depth, plt.cm.get_cmap("plasma").reversed())
             img_name = str(img_path).split("/")[-1]
             plt.savefig(output_dir + "/" + img_name.replace(".jpg", ".png"))

@@ -84,7 +84,7 @@ def main(data_dir, checkpoint_dir, output_dir, save_img):
     vars_to_restore = get_vars_to_save_and_restore(checkpoint)
     saver = tf.train.Saver(vars_to_restore)
     output_dir = Path(output_dir)
-    (output_dir / "frames").mkdir(parents=True, exist_ok=True)
+    (output_dir / "depth_annotations").mkdir(parents=True, exist_ok=True)
     with tf.Session() as sess:
         saver.restore(sess, checkpoint)
         sequence_paths = [
@@ -95,11 +95,16 @@ def main(data_dir, checkpoint_dir, output_dir, save_img):
             seq_name = seq_path.parts[-1]
             model_name = PurePath(checkpoint_dir).parts[-1]
 
-            depth_path = output_dir / "frames" / seq_name / str(model_name + "_depth")
+            depth_path = (
+                output_dir / "depth_annotations" / seq_name / str(model_name + "_depth")
+            )
             depth_path.mkdir(parents=True, exist_ok=True)
             if save_img:
                 depth_img_path = (
-                    output_dir / "frames" / seq_name / str(model_name + "_depth_images")
+                    output_dir
+                    / "depth_annotations"
+                    / seq_name
+                    / str(model_name + "_depth_images")
                 )
                 depth_img_path.mkdir(parents=True, exist_ok=True)
 

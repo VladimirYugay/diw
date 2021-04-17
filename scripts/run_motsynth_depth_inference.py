@@ -55,7 +55,7 @@ def plot_image(image, image_type="RGB"):
     "data_dir",
     default="./data/test/mots_data",
     type=click.Path(exists=True),
-    help="Path to MOTSynth data",
+    help="Path to MOTSynth rgb sequences",
 )
 @click.option(
     "--od",
@@ -84,27 +84,19 @@ def main(data_dir, checkpoint_dir, output_dir, save_img):
     vars_to_restore = get_vars_to_save_and_restore(checkpoint)
     saver = tf.train.Saver(vars_to_restore)
     output_dir = Path(output_dir)
-    (output_dir / "depth_annotations").mkdir(parents=True, exist_ok=True)
+    output_dir = output_dir / "all"
+    output_dir.mkdir(parents=True, exist_ok=True)
     with tf.Session() as sess:
         saver.restore(sess, checkpoint)
-        sequence_paths = [
-            p for p in (Path(data_dir) / "frames").glob("*") if p.is_dir()
-        ]
-        sequence_paths.sort(key=lambda path: str(path))
+        sequence_paths = sorted(Path(data_dir).glob("*"), key=lambda path: str(path))
         for seq_path in sequence_paths:
             seq_name = seq_path.parts[-1]
             model_name = PurePath(checkpoint_dir).parts[-1]
-
-            depth_path = (
-                output_dir / "depth_annotations" / seq_name / str(model_name + "_depth")
-            )
+            depth_path = output_dir / seq_name / str(model_name + "_depth")
             depth_path.mkdir(parents=True, exist_ok=True)
             if save_img:
                 depth_img_path = (
-                    output_dir
-                    / "depth_annotations"
-                    / seq_name
-                    / str(model_name + "_depth_images")
+                    output_dir / seq_name / str(model_name + "_depth_images")
                 )
                 depth_img_path.mkdir(parents=True, exist_ok=True)
 
